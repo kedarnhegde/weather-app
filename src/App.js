@@ -1,12 +1,12 @@
-import React from 'react';
-import './App.css';
-import Weather from './Components/weatherComponent';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'weather-icons/css/weather-icons.css'
-import Form from './Components/formComponent';
+import React from "react";
+import "./App.css";
+import Weather from "./Components/weatherComponent";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "weather-icons/css/weather-icons.css";
+import Form from "./Components/formComponent";
+import Footer from "./Components/footer";
 
-const API_KEY = 'de16cc0d74480dea2b232e06e31e400f';
-
+const API_KEY = "de16cc0d74480dea2b232e06e31e400f";
 
 class App extends React.Component {
   constructor() {
@@ -20,18 +20,17 @@ class App extends React.Component {
       max_temp: undefined,
       min_temp: undefined,
       desc: "",
-      error: false
-
+      error: false,
     };
 
     this.weatherIcon = {
-      Thunderstorm: 'wi-thunderstorm',
-      Drizzle: 'wi-sleet',
-      Rain: 'wi-storm-showers',
-      Snow: 'wi-snow',
-      Atmosphere: 'wi-fog',
-      Clear: 'wi-day-sunny',
-      Clouds: 'wi-day-fog'
+      Thunderstorm: "wi-thunderstorm",
+      Drizzle: "wi-sleet",
+      Rain: "wi-storm-showers",
+      Snow: "wi-snow",
+      Atmosphere: "wi-fog",
+      Clear: "wi-day-sunny",
+      Clouds: "wi-day-fog",
     };
   }
 
@@ -65,43 +64,40 @@ class App extends React.Component {
         break;
       default:
         this.setState({ weatherIcon: this.weatherIcon.Clouds });
-
     }
   }
 
   getWeather = async (e) => {
-
     e.preventDefault();
 
     const city = e.target.elements.city.value;
     const country = e.target.elements.country.value;
 
     if (city && country) {
-      const api_call = await fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${API_KEY}`);
-    const response = await api_call.json();
-    console.log(response);
+      const api_call = await fetch(
+        `http://api.openweathermap.org/data/2.5/weather?q=${city},${country}&appid=${API_KEY}`
+      );
+      const response = await api_call.json();
+      console.log(response);
 
-    this.setState({
-      city: `${response.name},${response.sys.country}`,
-      celsius: this.calCelsius(response.main.temp),
-      min_temp: this.calCelsius(response.main.temp_min),
-      max_temp: this.calCelsius(response.main.temp_max),
-      desc: response.weather[0].description,
-      error: false
-    });
-    this.get_WeatherIcon(this.weatherIcon, response.weather[0].id);
-
-  }
-  else {
-    this.setState({error: true});
-  }
-
-  }
+      this.setState({
+        city: `${response.name},${response.sys.country}`,
+        celsius: this.calCelsius(response.main.temp),
+        min_temp: this.calCelsius(response.main.temp_min),
+        max_temp: this.calCelsius(response.main.temp_max),
+        desc: response.weather[0].description,
+        error: false,
+      });
+      this.get_WeatherIcon(this.weatherIcon, response.weather[0].id);
+    } else {
+      this.setState({ error: true });
+    }
+  };
 
   render() {
     return (
-      <div className='App'>
-        <Form loadWeather = {this.getWeather} error = {this.state.error}/>
+      <div className="App">
+        <Form loadWeather={this.getWeather} error={this.state.error} />
         <Weather
           city={this.state.city}
           country={this.state.country}
@@ -111,10 +107,10 @@ class App extends React.Component {
           desc={this.state.desc}
           weatherIcon={this.state.weatherIcon}
         />
+        <Footer />
       </div>
     );
   }
 }
-
 
 export default App;
